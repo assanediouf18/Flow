@@ -1,15 +1,56 @@
 use std::{env, io};
+use std::fs::File;
+use std::io::{Read, Write};
 use std::path::PathBuf;
 use clap::{Arg, ArgMatches, Command};
 use crate::project::Project;
 
 pub fn create_main_command() -> Command {
-    Command::new("taskdash")
+    Command::new("otter")
+        .author("Assane Diouf")
         .about("Little cli to manage your projects")
-        .subcommand(
-            get_add_subcommand()
+        .subcommand(get_list_subcommand())
+        .subcommand(Command::new("open").about("Open the project. If the path is not found, tries a git clone"))
+        .subcommand(get_add_subcommand())
+        .subcommand(Command::new("remove").about("Remove a project"))
+        .subcommand(Command::new("update").about("Alllow to modifiy the description, name, path and git repository informations"))
+        .subcommand(Command::new("info").about("Display information about the project"))
+}
+
+fn get_list_subcommand() -> Command {
+    Command::new("list")
+        .about("Lists all the projects")
+}
+
+pub fn get_add_subcommand() -> Command {
+    Command::new("add")
+        .about("Add a new project to the manager. If you don't specify a preferred ide, vscode is set by default")
+        .arg(Arg::new("name").help("Specifies the name of the project"))
+        .arg(
+            Arg::new("desc")
+                .short('d').long("desc")
+                .required(false)
+                .default_value(None)
+                .help("Provide a description to your project in case you want to remember something")
+        )
+        .arg(
+            Arg::new("path")
+                .short('p').long("path")
+                .required(false)
+                .default_value(None)
+                .help("Provide the path of your project")
+        )
+        .arg(
+            Arg::new("ide")
+                .short('i')
+                .long("ide")
+                .required(false)
+                .default_value(None)
+                .help("Set the preferred ide for the project, by default it is vscode")
         )
 }
+
+const CONFIG_FILEPATH: &'static str = "config";
 
 pub fn add_project(sub_matches: &ArgMatches) {
     let name = sub_matches.get_one::<String>("name").expect("You must name your project");
@@ -68,31 +109,17 @@ pub fn add_project(sub_matches: &ArgMatches) {
 
     let project = Project::new(name.to_string(), path, ide, github_url, desc.cloned());
     println!("{:?}", project);
+    let mut config_file = get_config_file();
+    config_file.write_all(serde_json::to_string(&project).unwrap().as_bytes()).expect("Can't persist new configuration");
+
 }
 
-pub fn get_add_subcommand() -> Command {
-    Command::new("add")
-        .about("Add a new project to the manager. If you don't specify a preferred ide, vscode is set by default")
-        .arg(Arg::new("name").help("Specifies the name of the project"))
-        .arg(
-            Arg::new("desc")
-                .short('d').long("desc")
-                .required(false)
-                .default_value(None)
-                .help("Provides a description to your project in case you want to remember something")
-        )
-        .arg(
-            Arg::new("path")
-                .short('p').long("path")
-                .required(false)
-                .default_value(None)
-                .help("Provides the path of your project")
-        )
-        .arg(
-            Arg::new("ide")
-                .short('i')
-                .long("ide")
-                .required(false)
-                .default_value(None)
-        )
+fn get_config_file() -> File {
+    match File::open(CONFIG_FILEPATH) {
+        Ok(file) => file,
+        Err(_) => {
+            let mut file = File::create("config.test").expect("Error : can't save the project");
+            file
+        }
+    }
 }

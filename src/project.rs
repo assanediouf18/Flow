@@ -1,6 +1,7 @@
 use std::path::PathBuf;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Project {
     name: String,
     path: PathBuf,
