@@ -67,7 +67,7 @@ pub fn add_project(config: &Configuration, projects: &mut Vec<Project>,sub_match
             let mut input = String::new();
             println!("Please enter your preferred ide for this project (vscode) : ");
             io::stdin().read_line(&mut input).expect("Invalid input");
-            if (input.is_empty() || input == "\r\n") {
+            if input.is_empty() || input == "\r\n" {
                 "vscode".to_string()
             } else {
                 input

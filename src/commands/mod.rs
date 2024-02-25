@@ -2,7 +2,6 @@ pub mod add;
 pub mod list;
 pub mod info;
 
-use std::io::{Read, Write};
 use clap::{Command};
 use crate::commands::add::get_add_subcommand;
 use crate::commands::info::{get_info_subcommand};
