@@ -1,27 +1,10 @@
 use std::{env, io};
 use std::fs::File;
-use std::io::{Read, Write};
+use std::io::Write;
 use std::path::PathBuf;
 use clap::{Arg, ArgMatches, Command};
 use crate::config::Configuration;
 use crate::project::Project;
-
-pub fn create_main_command(config: &Configuration, projects: &mut Vec<Project>) -> Command {
-    Command::new("flow")
-        .author("Assane Diouf")
-        .about("Little cli to manage your projects")
-        .subcommand(get_list_subcommand())
-        .subcommand(Command::new("open").about("Open the project. If the path is not found, tries a git clone"))
-        .subcommand(get_add_subcommand())
-        .subcommand(Command::new("remove").about("Remove a project"))
-        .subcommand(Command::new("update").about("Modify the description, name, path and git repository"))
-        .subcommand(Command::new("info").about("Display information about the project"))
-}
-
-fn get_list_subcommand() -> Command {
-    Command::new("list")
-        .about("Lists all the projects")
-}
 
 pub fn get_add_subcommand() -> Command {
     Command::new("add")
@@ -51,9 +34,7 @@ pub fn get_add_subcommand() -> Command {
         )
 }
 
-const CONFIG_FILEPATH: &'static str = "config";
-
-pub fn add_project(sub_matches: &ArgMatches) {
+pub fn add_project(config: &Configuration, projects: &mut Vec<Project>,sub_matches: &ArgMatches) {
     let name = sub_matches.get_one::<String>("name").expect("You must name your project");
     println!("Creating project {}", name);
 
@@ -110,17 +91,20 @@ pub fn add_project(sub_matches: &ArgMatches) {
 
     let project = Project::new(name.to_string(), path, ide, github_url, desc.cloned());
     println!("{:?}", project);
-    let mut config_file = get_config_file();
-    config_file.write_all(serde_json::to_string(&project).unwrap().as_bytes()).expect("Can't persist new configuration");
 
-}
+    projects.push(project);
 
-fn get_config_file() -> File {
-    match File::open(CONFIG_FILEPATH) {
-        Ok(file) => file,
-        Err(_) => {
-            let mut file = File::create("config.test").expect("Error : can't save the project");
-            file
-        }
-    }
+    let mut config_file = File::options()
+        .write(true)
+        .open(
+            config.get_projects_filepath()
+        ).expect("Error : can't open project file");
+
+    config_file.write_all(
+        serde_json::to_string(projects)
+            .unwrap()
+            .as_bytes()
+    ).expect("Can't persist new project");
+
+    println!("The project {} was successfully added", project.name)
 }

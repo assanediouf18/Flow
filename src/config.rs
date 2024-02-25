@@ -20,12 +20,6 @@ pub fn get_configuration() -> Result<Configuration, config::ConfigError> {
 }
 
 impl Configuration {
-    pub fn new() -> Self {
-        Self{
-            editors: Vec::new(),
-            project_file: String::new(),
-        }
-    }
 
     pub fn get_projects_filepath(&self) -> String {
         match File::open(&self.project_file) {

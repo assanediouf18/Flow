@@ -5,11 +5,11 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Project {
-    name: String,
-    path: PathBuf,
-    ide: String,
-    github_url: Option<String>,
-    description: Option<String>
+    pub name: String,
+    pub path: PathBuf,
+    pub ide: String,
+    pub github_url: Option<String>,
+    pub description: Option<String>
 }
 
 pub fn load_projects(filepath: &str) -> serde_json::Result<Vec<Project>> {
