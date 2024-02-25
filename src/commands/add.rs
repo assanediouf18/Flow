@@ -36,6 +36,11 @@ pub fn get_add_subcommand() -> Command {
 
 pub fn add_project(config: &Configuration, projects: &mut Vec<Project>,sub_matches: &ArgMatches) {
     let name = sub_matches.get_one::<String>("name").expect("You must name your project");
+    if let Some(project) = projects.iter().find(|p| { p.name.to_lowercase() == name.to_lowercase() }) {
+        println!("A project name '{}' already exists", project.name);
+        return;
+    }
+
     println!("Creating project {}", name);
 
     let desc = match sub_matches.get_one::<String>("desc") {
@@ -51,7 +56,8 @@ pub fn add_project(config: &Configuration, projects: &mut Vec<Project>,sub_match
                          .expect("Can't retrieve current path")
                          .to_str().expect("Can't convert current path to string"));
             io::stdin().read_line(&mut input).expect("Invalid input");
-            if input == "\r\n" {
+            let input = input.trim();
+            if input == "" {
                 PathBuf::from(env::current_dir()
                     .expect("Can't retrieve current path")
                     .to_str().expect("Can't convert current path to string"))

@@ -22,9 +22,9 @@ impl Configuration {
 
     pub fn get_projects_filepath(&self) -> String {
         match File::open(&self.project_file) {
-            Ok(file) => {},
+            Ok(_) => {},
             Err(_) => {
-                let mut file = File::create(&self.project_file).expect("Error : can't save the project");
+                let mut file = File::create(&self.project_file).expect("Error : Can't create project file");
                 file.write_all("[]".as_ref()).expect("Can't initialize project file");
             }
         };
