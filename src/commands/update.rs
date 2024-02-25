@@ -52,36 +52,30 @@ pub fn update_project(config: &Configuration, projects: &mut Vec<Project>,sub_ma
     if let Some(project) = projects.iter_mut().find(|p| { p.name.to_lowercase() == name.to_lowercase() }) {
         println!("Updating project {}", name);
 
-        let desc = match(sub_matches.get_one::<String>("desc")) {
+        project.description = match(sub_matches.get_one::<String>("desc")) {
             None => project.description.clone(),
             Some(d) => Some(d.to_string())
         };
 
-        let path = match(sub_matches.get_one::<String>("path")) {
+        project.path = match(sub_matches.get_one::<String>("path")) {
             None => project.path.clone(),
             Some(p) => p.into()
         };
 
-        let ide = match(sub_matches.get_one::<String>("ide")) {
+        project.ide = match(sub_matches.get_one::<String>("ide")) {
             None => project.ide.clone(),
             Some(d) => d.to_string()
         };
 
-        let github_url: Option<String> = match(sub_matches.get_one::<String>("vcs")) {
+        project.github_url= match(sub_matches.get_one::<String>("vcs")) {
             None => project.github_url.clone(),
             Some(d) => Some(d.to_string())
         };
 
-        let new_name = match(sub_matches.get_one::<String>("new-name")) {
+        project.name = match(sub_matches.get_one::<String>("new-name")) {
             None => project.name.clone(),
             Some(d) => d.to_string()
         };
-
-        project.name = new_name;
-        project.path = path;
-        project.ide = ide;
-        project.github_url = github_url;
-        project.description = desc;
 
         let mut config_file = File::options()
             .write(true)
@@ -94,7 +88,7 @@ pub fn update_project(config: &Configuration, projects: &mut Vec<Project>,sub_ma
             serde_json::to_string(&projects)
                 .unwrap()
                 .as_bytes()
-        ).expect("Can't persist new project");
+        ).expect("Can't update project file");
 
         println!("The project was successfully updated")
     }
