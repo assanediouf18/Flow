@@ -3,9 +3,10 @@ use std::fs::File;
 use std::io::{Read, Write};
 use std::path::PathBuf;
 use clap::{Arg, ArgMatches, Command};
+use crate::config::Configuration;
 use crate::project::Project;
 
-pub fn create_main_command() -> Command {
+pub fn create_main_command(config: &Configuration, projects: &mut Vec<Project>) -> Command {
     Command::new("flow")
         .author("Assane Diouf")
         .about("Little cli to manage your projects")
