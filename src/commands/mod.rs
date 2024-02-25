@@ -1,9 +1,11 @@
 pub mod add;
 pub mod list;
+pub mod info;
 
 use std::io::{Read, Write};
 use clap::{Command};
 use crate::commands::add::get_add_subcommand;
+use crate::commands::info::{get_info_subcommand};
 use crate::commands::list::get_list_subcommand;
 
 pub fn create_main_command() -> Command {
@@ -15,5 +17,5 @@ pub fn create_main_command() -> Command {
         .subcommand(get_add_subcommand())
         .subcommand(Command::new("remove").about("Remove a project"))
         .subcommand(Command::new("update").about("Modify the description, name, path and git repository"))
-        .subcommand(Command::new("info").about("Display information about the project"))
+        .subcommand(get_info_subcommand())
 }

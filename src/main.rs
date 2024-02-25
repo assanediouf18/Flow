@@ -5,9 +5,10 @@ mod commands;
 
 use commands::*;
 use crate::commands::add::add_project;
+use crate::commands::info::project_info;
 use crate::commands::list::list_projects;
 use crate::config::get_configuration;
-use crate::project::{load_projects, Project};
+use crate::project::{load_projects};
 
 fn main() {
     let config = get_configuration().expect("Can't read configurations");
@@ -21,6 +22,9 @@ fn main() {
         },
         Some(("list", _)) => {
             list_projects(&projects);
+        },
+        Some(("info", sub_matches)) => {
+            project_info(&projects, sub_matches);
         },
         _ => println!("Let's start !")//unreachable!()
     }
