@@ -1,0 +1,9 @@
+{
+  "project_file": "projects",
+  "editors": [
+    {
+      "name": "vscode",
+      "command": "code"
+    }
+  ]
+}
