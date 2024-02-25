@@ -8,6 +8,7 @@ use crate::commands::add::add_project;
 use crate::commands::info::project_info;
 use crate::commands::list::list_projects;
 use crate::commands::remove::remove_project;
+use crate::commands::update::update_project;
 use crate::config::get_configuration;
 use crate::project::{load_projects};
 
@@ -20,6 +21,9 @@ fn main() {
     match matches.get_matches().subcommand() {
         Some(("add", sub_matches)) => {
             add_project(&config, &mut projects, sub_matches);
+        },
+        Some(("update", sub_matches)) => {
+            update_project(&config, &mut projects, sub_matches);
         },
         Some(("remove", sub_matches)) => {
             remove_project(&config, &mut projects, sub_matches);

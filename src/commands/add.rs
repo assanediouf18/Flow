@@ -102,6 +102,7 @@ pub fn add_project(config: &Configuration, projects: &mut Vec<Project>,sub_match
 
     let mut config_file = File::options()
         .write(true)
+        .truncate(true)
         .open(
             config.get_projects_filepath()
         ).expect("Error : can't open project file");
