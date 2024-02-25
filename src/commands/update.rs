@@ -1,7 +1,5 @@
-use std::{env, io};
 use std::fs::File;
 use std::io::Write;
-use std::path::PathBuf;
 use clap::{Arg, ArgMatches, Command};
 use crate::config::Configuration;
 use crate::project::Project;
