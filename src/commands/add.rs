@@ -101,10 +101,10 @@ pub fn add_project(config: &Configuration, projects: &mut Vec<Project>,sub_match
         ).expect("Error : can't open project file");
 
     config_file.write_all(
-        serde_json::to_string(projects)
+        serde_json::to_string(&projects)
             .unwrap()
             .as_bytes()
     ).expect("Can't persist new project");
 
-    println!("The project {} was successfully added", project.name)
+    println!("The project was successfully added")
 }

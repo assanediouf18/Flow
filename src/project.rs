@@ -13,7 +13,8 @@ pub struct Project {
 }
 
 pub fn load_projects(filepath: &str) -> serde_json::Result<Vec<Project>> {
-    let projects = fs::read_to_string(filepath).expect("Can't open project file");    serde_json::from_str(&projects)
+    let projects = fs::read_to_string(filepath).expect("Can't open project file");
+    serde_json::from_str(&projects)
 }
 
 impl Project {

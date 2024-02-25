@@ -2,7 +2,6 @@ use std::fs::File;
 use std::io::Write;
 use serde::{Deserialize, Serialize};
 use crate::editor::Editor;
-use crate::project::Project;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Configuration

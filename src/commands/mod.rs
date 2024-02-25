@@ -1,12 +1,10 @@
 pub mod add;
-mod list;
+pub mod list;
 
 use std::io::{Read, Write};
-use clap::{Arg, ArgMatches, Command};
+use clap::{Command};
 use crate::commands::add::get_add_subcommand;
 use crate::commands::list::get_list_subcommand;
-use crate::config::Configuration;
-use crate::project::Project;
 
 pub fn create_main_command() -> Command {
     Command::new("flow")

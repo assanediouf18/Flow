@@ -1,5 +1,5 @@
 {
-  "project_file": ".projects.flow",
+  "project_file": ".projects.flow.json",
   "editors": [
     {
       "name": "vscode",
