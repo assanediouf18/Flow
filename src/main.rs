@@ -7,6 +7,7 @@ use commands::*;
 use crate::commands::add::add_project;
 use crate::commands::info::project_info;
 use crate::commands::list::list_projects;
+use crate::commands::open::open_project;
 use crate::commands::remove::remove_project;
 use crate::commands::update::update_project;
 use crate::config::get_configuration;
@@ -27,6 +28,9 @@ fn main() {
         },
         Some(("remove", sub_matches)) => {
             remove_project(&config, &mut projects, sub_matches);
+        },
+        Some(("open", sub_matches)) => {
+            open_project(&config, &mut projects, sub_matches);
         },
         Some(("list", _)) => {
             list_projects(&projects);

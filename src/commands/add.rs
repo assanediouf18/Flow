@@ -9,7 +9,7 @@ use crate::project::Project;
 pub fn get_add_subcommand() -> Command {
     Command::new("add")
         .about("Add a new project to the manager. If you don't specify a preferred ide, vscode is set by default")
-        .arg(Arg::new("name").help("Specifies the name of the project"))
+        .arg(Arg::new("name").help("The name of the project"))
         .arg(
             Arg::new("desc")
                 .short('d').long("desc")
