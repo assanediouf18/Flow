@@ -57,7 +57,7 @@ pub fn add_project(config: &Configuration, projects: &mut Vec<Project>,sub_match
                          .to_str().expect("Can't convert current path to string"));
             io::stdin().read_line(&mut input).expect("Invalid input");
             let input = input.trim();
-            if input == "" {
+            if input.is_empty() {
                 PathBuf::from(env::current_dir()
                     .expect("Can't retrieve current path")
                     .to_str().expect("Can't convert current path to string"))
@@ -73,10 +73,11 @@ pub fn add_project(config: &Configuration, projects: &mut Vec<Project>,sub_match
             let mut input = String::new();
             println!("Please enter your preferred ide for this project (vscode) : ");
             io::stdin().read_line(&mut input).expect("Invalid input");
-            if input.is_empty() || input == "\r\n" {
+            let input = input.trim();
+            if input.is_empty() {
                 "vscode".to_string()
             } else {
-                input
+                input.to_string()
             }
         }
         Some(value) => value.to_string()
@@ -86,10 +87,11 @@ pub fn add_project(config: &Configuration, projects: &mut Vec<Project>,sub_match
     let mut repo = String::new();
     let github_url = match io::stdin().read_line(&mut repo) {
         Ok(_) => {
-            if repo == "\r\n" {
+            let repo = repo.trim();
+            if repo.is_empty() {
                 None
             } else {
-                Some(repo)
+                Some(repo.to_string())
             }
         },
         Err(_) => None

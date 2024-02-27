@@ -32,9 +32,10 @@ pub fn get_update_command() -> clap::Command {
         )
         .arg(
             Arg::new("vcs")
+                .short('v')
+                .long("vcs")
                 .required(false)
                 .default_value(None)
-                .required(false)
                 .help("Link the project to a repository")
         )
         .arg(
@@ -53,27 +54,27 @@ pub fn update_project(config: &Configuration, projects: &mut Vec<Project>,sub_ma
 
         project.description = match sub_matches.get_one::<String>("desc") {
             None => project.description.clone(),
-            Some(d) => Some(d.to_string())
+            Some(d) => Some(d.trim().to_string())
         };
 
         project.path = match sub_matches.get_one::<String>("path") {
             None => project.path.clone(),
-            Some(p) => p.into()
+            Some(p) => p.trim().into()
         };
 
         project.ide = match sub_matches.get_one::<String>("ide") {
             None => project.ide.clone(),
-            Some(d) => d.to_string()
+            Some(d) => d.trim().to_string()
         };
 
         project.github_url= match sub_matches.get_one::<String>("vcs") {
             None => project.github_url.clone(),
-            Some(d) => Some(d.to_string())
+            Some(d) => Some(d.trim().to_string())
         };
 
         project.name = match sub_matches.get_one::<String>("new-name") {
             None => project.name.clone(),
-            Some(d) => d.to_string()
+            Some(d) => d.trim().to_string()
         };
 
         let mut config_file = File::options()
