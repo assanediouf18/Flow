@@ -30,4 +30,8 @@ impl Configuration {
         };
         self.project_file.clone()
     }
+
+    pub fn get_editor(&self, editor_name: &str) -> Option<&Editor> {
+        self.editors.iter().find(|e| { e.name.to_lowercase() == editor_name.to_lowercase() })
+    }
 }
