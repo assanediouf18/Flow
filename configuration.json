@@ -4,6 +4,14 @@
     {
       "name": "vscode",
       "command": "code"
+    },
+    {
+      "name": "phpstorm",
+      "command": "phpstorm64"
+    },
+    {
+      "name": "clion",
+      "command": "clion64"
     }
   ]
 }

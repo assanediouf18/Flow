@@ -17,7 +17,7 @@ pub fn open_project(config: &Configuration, projects: &mut Vec<Project>,sub_matc
                 let mut editor_command = std::process::Command::new("cmd");
                 editor_command
                     .arg("/C")
-                    .arg("code")
+                    .arg(&editor.command)
                 ;
 
                 editor_command

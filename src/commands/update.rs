@@ -34,6 +34,7 @@ pub fn get_update_command() -> clap::Command {
             Arg::new("vcs")
                 .required(false)
                 .default_value(None)
+                .required(false)
                 .help("Link the project to a repository")
         )
         .arg(
@@ -50,7 +51,7 @@ pub fn update_project(config: &Configuration, projects: &mut Vec<Project>,sub_ma
     if let Some(project) = projects.iter_mut().find(|p| { p.name.to_lowercase() == name.to_lowercase() }) {
         println!("Updating project {}", name);
 
-        project.description = match(sub_matches.get_one::<String>("desc")) {
+        project.description = match sub_matches.get_one::<String>("desc") {
             None => project.description.clone(),
             Some(d) => Some(d.to_string())
         };
