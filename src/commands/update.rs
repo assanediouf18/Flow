@@ -56,22 +56,22 @@ pub fn update_project(config: &Configuration, projects: &mut Vec<Project>,sub_ma
             Some(d) => Some(d.to_string())
         };
 
-        project.path = match(sub_matches.get_one::<String>("path")) {
+        project.path = match sub_matches.get_one::<String>("path") {
             None => project.path.clone(),
             Some(p) => p.into()
         };
 
-        project.ide = match(sub_matches.get_one::<String>("ide")) {
+        project.ide = match sub_matches.get_one::<String>("ide") {
             None => project.ide.clone(),
             Some(d) => d.to_string()
         };
 
-        project.github_url= match(sub_matches.get_one::<String>("vcs")) {
+        project.github_url= match sub_matches.get_one::<String>("vcs") {
             None => project.github_url.clone(),
             Some(d) => Some(d.to_string())
         };
 
-        project.name = match(sub_matches.get_one::<String>("new-name")) {
+        project.name = match sub_matches.get_one::<String>("new-name") {
             None => project.name.clone(),
             Some(d) => d.to_string()
         };

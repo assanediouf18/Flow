@@ -18,7 +18,7 @@ pub fn remove_project(config: &Configuration, projects: &mut Vec<Project>, sub_m
 
     if let Some((index, _)) = projects.iter()
         .enumerate()
-        .find(|(i, p)| {
+        .find(|(_i, p)| {
             p.name.to_lowercase() == name.to_lowercase()
         }) {
 

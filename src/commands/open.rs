@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+
 use clap::{Arg, ArgMatches, Command};
 use crate::config::Configuration;
 use crate::project::Project;
