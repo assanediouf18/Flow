@@ -83,7 +83,7 @@ fn clone_repo(project: &mut Project) -> Option<PathBuf> {
             .arg(&vcs)
             //.arg(&path)
             //.output()
-            .spawn()
+            .status()
             .expect("Can't clone project")
         ;
             //.stdout;
