@@ -77,18 +77,7 @@ pub fn update_project(config: &Configuration, projects: &mut Vec<Project>,sub_ma
             Some(d) => d.trim().to_string()
         };
 
-        let mut config_file = File::options()
-            .write(true)
-            .truncate(true)
-            .open(
-                config.get_projects_filepath()
-            ).expect("Error : can't open project file");
-
-        config_file.write_all(
-            serde_json::to_string(&projects)
-                .unwrap()
-                .as_bytes()
-        ).expect("Can't update project file");
+        config.update_config_file(&projects);
 
         println!("The project was successfully updated")
     }

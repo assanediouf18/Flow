@@ -102,18 +102,7 @@ pub fn add_project(config: &Configuration, projects: &mut Vec<Project>,sub_match
 
     projects.push(project);
 
-    let mut config_file = File::options()
-        .write(true)
-        .truncate(true)
-        .open(
-            config.get_projects_filepath()
-        ).expect("Error : can't open project file");
-
-    config_file.write_all(
-        serde_json::to_string(&projects)
-            .unwrap()
-            .as_bytes()
-    ).expect("Can't persist new project");
+    config.update_config_file(&projects);
 
     println!("The project was successfully added")
 }

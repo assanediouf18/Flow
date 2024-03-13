@@ -29,6 +29,8 @@ pub fn open_project(config: &Configuration, projects: &mut Vec<Project>,sub_matc
                         .output()
                         .expect("Can't open project")
                         .stdout;
+
+                    config.update_config_file(&projects);
                 }
                 else {
                     println!("No correct path found. Operation aborted")
@@ -59,24 +61,23 @@ fn get_project_or_clone(project: &mut Project) -> Option<PathBuf> {
 }
 
 fn clone_repo(project: &mut Project) -> Option<PathBuf> {
-    let mut path = PathBuf::new();
-    let mut input = String::new();
     println!("Please enter the path to clone the project ({}) : ",
              project.path
                  .to_str().expect("Can't convert current path to string"));
+    let mut path;
+    let mut input = String::new();
     io::stdin().read_line(&mut input).expect("Invalid input");
     let input = input.trim();
     if input.is_empty() {
-        path = PathBuf::from(env::current_dir()
-            .expect("Can't retrieve current path")
-            .to_str().expect("Can't convert current path to string"));
+        path = PathBuf::from(&project.path);
     } else {
         path = PathBuf::from(input);
     }
+    path.push(PathBuf::from(&project.name));
+
     if let Some(vcs) = project.github_url.clone() {
         let mut git_command = std::process::Command::new("git");
-        path.push(PathBuf::from(&project.name));
-        println!("Path {}", path.to_str().expect("Invalid directory"));
+
         println!("> git clone");
         let result = git_command
             .args(["clone"])

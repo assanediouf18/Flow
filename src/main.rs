@@ -38,6 +38,6 @@ fn main() {
         Some(("info", sub_matches)) => {
             project_info(&projects, sub_matches);
         },
-        _ => println!("Welcome in Flow ! Add a project and start working fast")//unreachable!()
+        _ => println!("Welcome in Flow ! Add a project and start working fast")
     }
 }
