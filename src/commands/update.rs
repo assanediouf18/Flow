@@ -1,5 +1,3 @@
-use std::fs::File;
-use std::io::Write;
 use clap::{Arg, ArgMatches, Command};
 use crate::config::Configuration;
 use crate::project::Project;

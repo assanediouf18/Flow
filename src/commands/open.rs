@@ -2,7 +2,7 @@
 use clap::{Arg, ArgMatches, Command};
 use crate::config::Configuration;
 use crate::project::Project;
-use std::{env, io};
+use std::io;
 use std::path::PathBuf;
 
 pub fn get_open_subcommand() -> clap::Command {
@@ -96,7 +96,7 @@ fn clone_repo(project: &mut Project) -> Option<PathBuf> {
         let mut answer = String::new();
         io::stdin().read_line(&mut answer).expect("Invalid input");
         let answer = answer.trim();
-        if answer.to_lowercase() == "Y" {
+        if answer.to_lowercase() == "y" {
             project.path = path.clone();
         };
 
