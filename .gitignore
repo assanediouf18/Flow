@@ -1,3 +1,5 @@
 /target
 config.test
 .projects.flow.json
+.idea
+quotegame

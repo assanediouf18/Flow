@@ -4,7 +4,6 @@ use crate::config::Configuration;
 use crate::project::Project;
 use std::{env, io};
 use std::path::PathBuf;
-use std::process::Stdio;
 
 pub fn get_open_subcommand() -> clap::Command {
     Command::new("open")
@@ -26,7 +25,7 @@ pub fn open_project(config: &Configuration, projects: &mut Vec<Project>,sub_matc
                     ;
 
                     editor_command
-                        .arg(&project.path)
+                        .arg(&path)
                         .output()
                         .expect("Can't open project")
                         .stdout;
@@ -60,7 +59,7 @@ fn get_project_or_clone(project: &mut Project) -> Option<PathBuf> {
 }
 
 fn clone_repo(project: &mut Project) -> Option<PathBuf> {
-    let mut path = env::current_dir().expect(".");
+    let mut path = PathBuf::new();
     let mut input = String::new();
     println!("Please enter the path to clone the project ({}) : ",
              project.path
@@ -75,18 +74,22 @@ fn clone_repo(project: &mut Project) -> Option<PathBuf> {
         path = PathBuf::from(input);
     }
     if let Some(vcs) = project.github_url.clone() {
-        let mut editor_command = std::process::Command::new("git");
+        let mut git_command = std::process::Command::new("git");
+        path.push(PathBuf::from(&project.name));
+        println!("Path {}", path.to_str().expect("Invalid directory"));
         println!("> git clone");
-        editor_command
-            .current_dir(path.clone())
+        let result = git_command
             .args(["clone"])
             .arg(&vcs)
-            //.arg(&path)
-            //.output()
+            .arg(&path)
             .status()
             .expect("Can't clone project")
         ;
-            //.stdout;
+
+        if !result.success() {
+            println!("An error occured while cloning the project");
+            return None;
+        }
 
         println!("Do you want to update the path of your project ? (Y/n)");
         let mut answer = String::new();
