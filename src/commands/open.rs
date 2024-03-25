@@ -2,8 +2,9 @@
 use clap::{Arg, ArgMatches, Command};
 use crate::config::Configuration;
 use crate::project::Project;
-use std::io;
+use std::{env, io};
 use std::path::PathBuf;
+use crate::timer::start_time;
 
 pub fn get_open_subcommand() -> clap::Command {
     Command::new("open")
@@ -17,20 +18,16 @@ pub fn open_project(config: &Configuration, projects: &mut Vec<Project>,sub_matc
         match config.get_editor(&project.ide) {
             Some(editor) => {
                 if let Some(path) = get_project_or_clone(project) {
-                    let mut editor_command = std::process::Command::new("cmd");
+                    let mut editor_command = std::process::Command::new(&editor.command);
                     println!("> Opening the project");
-                    editor_command
-                        .arg("/C")
-                        .arg(&editor.command)
-                    ;
 
                     editor_command
                         .arg(&path)
-                        .output()
-                        .expect("Can't open project")
-                        .stdout;
+                        .status()
+                        .expect("Can't open project");
 
                     config.update_config_file(&projects);
+                    start_time();
                 }
                 else {
                     println!("No correct path found. Operation aborted")
@@ -48,7 +45,8 @@ pub fn open_project(config: &Configuration, projects: &mut Vec<Project>,sub_matc
 
 fn get_project_or_clone(project: &mut Project) -> Option<PathBuf> {
     if !project.path.exists() {
-        println!("Flow can't find the project at {}, would you like to clone it ? (Y/n)", project.path.to_str().expect("Incorrect Path"));
+        println!("Flow can't find the project at {}, would you like to clone it ? (Y/n)",
+                 project.path.to_str().expect("Incorrect Path"));
         let mut should_clone = String::new();
         io::stdin().read_line(&mut should_clone).expect("Invalid input");
         let should_clone = should_clone.trim();
@@ -62,7 +60,8 @@ fn get_project_or_clone(project: &mut Project) -> Option<PathBuf> {
 
 fn clone_repo(project: &mut Project) -> Option<PathBuf> {
     println!("Please enter the path to clone the project ({}) : ",
-             project.path
+             env::current_dir()
+                 .expect("Can't retrieve current path")
                  .to_str().expect("Can't convert current path to string"));
     let mut path;
     let mut input = String::new();
@@ -91,7 +90,7 @@ fn clone_repo(project: &mut Project) -> Option<PathBuf> {
             println!("An error occured while cloning the project");
             return None;
         }
-
+        println!("Your project was cloned successfully, don't forget to install the dependencies (npm install, composer install, etc...)");
         println!("Do you want to update the path of your project ? (Y/n)");
         let mut answer = String::new();
         io::stdin().read_line(&mut answer).expect("Invalid input");

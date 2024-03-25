@@ -2,6 +2,7 @@ mod project;
 mod config;
 mod editor;
 mod commands;
+mod timer;
 
 use commands::*;
 use crate::commands::add::add_project;
