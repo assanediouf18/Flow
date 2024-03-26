@@ -9,6 +9,6 @@ pub fn get_list_subcommand() -> Command {
 pub fn list_projects(projects: &Vec<Project>) {
     println!("Here is a list of your projects:");
     for project in projects.iter() {
-        println!(" - {}", project.name);
+        println!(" - {} ({})", project.name, project.print_timer());
     }
 }

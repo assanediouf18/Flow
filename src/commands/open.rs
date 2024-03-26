@@ -4,6 +4,7 @@ use crate::config::Configuration;
 use crate::project::Project;
 use std::{env, io};
 use std::path::PathBuf;
+use crate::flow_timer::FlowTimer;
 use crate::timer::start_time;
 
 pub fn get_open_subcommand() -> clap::Command {
@@ -12,7 +13,7 @@ pub fn get_open_subcommand() -> clap::Command {
         .arg(Arg::new("name").help("The name of the project"))
 }
 
-pub fn open_project(config: &Configuration, projects: &mut Vec<Project>,sub_matches: &ArgMatches) {
+pub fn open_project(config: &Configuration, projects: &mut Vec<Project>, timers: &mut Vec<FlowTimer>, sub_matches: &ArgMatches) {
     let name = sub_matches.get_one::<String>("name").expect("You must enter a project name");
     if let Some(project) = projects.iter_mut().find(|p| { p.name.to_lowercase() == name.to_lowercase() }) {
         match config.get_editor(&project.ide) {
@@ -20,6 +21,7 @@ pub fn open_project(config: &Configuration, projects: &mut Vec<Project>,sub_matc
                 if let Some(path) = get_project_or_clone(project) {
                     let mut editor_command = std::process::Command::new(&editor.command);
                     println!("> Opening the project");
+                    // println!("If the timer doesn't start after the opening of your project, you can start with using the command: flow time [project name]");
 
                     editor_command
                         .arg(&path)
@@ -27,7 +29,7 @@ pub fn open_project(config: &Configuration, projects: &mut Vec<Project>,sub_matc
                         .expect("Can't open project");
 
                     config.update_config_file(&projects);
-                    start_time();
+                    start_time(name.clone().to_string(), timers);
                 }
                 else {
                     println!("No correct path found. Operation aborted")

@@ -25,6 +25,7 @@ pub fn project_info(projects: &Vec<Project>, sub_matches: &ArgMatches) {
                 println!("VCS: {}", git);
             }
             println!("IDE: {}", project.ide);
+            println!("Time: {}", project.print_timer());
         },
         None => {
             println!("This project does not exist");

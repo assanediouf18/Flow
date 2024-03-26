@@ -96,7 +96,6 @@ pub fn add_project(config: &Configuration, projects: &mut Vec<Project>,sub_match
     };
 
     let project = Project::new(name.to_string(), path, ide, github_url, desc.cloned());
-    println!("{:?}", project);
 
     projects.push(project);
 
