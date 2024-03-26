@@ -17,7 +17,7 @@ impl FlowTimer {
 
     pub fn get_duration(&self) -> Option<TimeDelta> {
         if let Some(started_time) = self.started {
-            return Some(started_time.signed_duration_since(Local::now()));
+            return Some(Local::now().signed_duration_since(started_time));
         }
         return None;
     }

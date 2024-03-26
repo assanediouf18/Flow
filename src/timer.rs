@@ -1,3 +1,4 @@
+use std::sync::mpsc::channel;
 use chrono::TimeDelta;
 use clap::{Arg, ArgMatches, Command};
 use crate::config::Configuration;
@@ -39,9 +40,14 @@ pub fn stop_timer_command(config: &Configuration, projects: &mut Vec<Project>, t
 }
 
 pub fn start_time(project_name: String, timers: &mut Vec<FlowTimer>) {
+    let (tx, rx) = channel();
     timers.push(FlowTimer::new(project_name));
     println!("Flow started a timer to measure your work time.");
-    // println!("You can stop the execution (Ctrl + C or Ctrl + D) if you want and then Flow will stop timing you.");
+    println!("You can stop the execution (Ctrl + C) if you want and then Flow will stop timing you.");
+    ctrlc::set_handler(move || tx.send(()).expect("Could not send signal on channel."))
+        .expect("Error setting Ctrl-C handler");
+    rx.recv().expect("Could not receive from channel.");
+    println!("Updating the timer of the project");
 }
 
 pub fn stop_time(project_name: String, timers: &mut Vec<FlowTimer>) -> Option<TimeDelta> {
