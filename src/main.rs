@@ -44,7 +44,7 @@ fn main() {
             project_info(&projects, sub_matches);
         },
         Some(("start-timer", sub_matches)) => {
-            start_timer_command(&mut projects, &mut timers, sub_matches);
+            start_timer_command(&config, &mut projects, &mut timers, sub_matches);
         },
         Some(("stop-timer", sub_matches)) => {
             stop_timer_command(&config, &mut projects, &mut timers, sub_matches);

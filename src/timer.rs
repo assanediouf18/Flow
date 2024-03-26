@@ -17,10 +17,16 @@ pub fn get_stop_time_subcommand() -> Command {
         .arg(Arg::new("name").help("The name of the project"))
 }
 
-pub fn start_timer_command(projects: &mut Vec<Project>, timers: &mut Vec<FlowTimer>, sub_matches: &ArgMatches) {
+pub fn start_timer_command(config: &Configuration, projects: &mut Vec<Project>, timers: &mut Vec<FlowTimer>, sub_matches: &ArgMatches) {
     let name = sub_matches.get_one::<String>("name").expect("You must enter a project name");
     if let Some(project) = projects.iter_mut().find(|p| { p.name.to_lowercase() == name.to_lowercase() }) {
+        let (tx, rx) = channel();
         start_time(project.name.clone(), timers);
+        ctrlc::set_handler(move || tx.send(()).expect("Could not send signal on channel."))
+            .expect("Error setting Ctrl-C handler");
+        rx.recv().expect("Could not receive from channel.");
+        println!("Updating the timer of the project");
+        stop_timer_command(&config, projects, timers, sub_matches);
     }
     else {
         println!("The project '{name}' does not exist");
@@ -40,14 +46,9 @@ pub fn stop_timer_command(config: &Configuration, projects: &mut Vec<Project>, t
 }
 
 pub fn start_time(project_name: String, timers: &mut Vec<FlowTimer>) {
-    let (tx, rx) = channel();
-    timers.push(FlowTimer::new(project_name));
+    timers.push(FlowTimer::new(project_name.clone()));
     println!("Flow started a timer to measure your work time.");
-    println!("You can stop the execution (Ctrl + C) if you want and then Flow will stop timing you.");
-    ctrlc::set_handler(move || tx.send(()).expect("Could not send signal on channel."))
-        .expect("Error setting Ctrl-C handler");
-    rx.recv().expect("Could not receive from channel.");
-    println!("Updating the timer of the project");
+    println!("You can stop the execution (Ctrl + C) if you want and then Flow will stop timing you.")
 }
 
 pub fn stop_time(project_name: String, timers: &mut Vec<FlowTimer>) -> Option<TimeDelta> {

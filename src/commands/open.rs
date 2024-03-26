@@ -5,7 +5,7 @@ use crate::project::Project;
 use std::{env, io};
 use std::path::PathBuf;
 use crate::flow_timer::FlowTimer;
-use crate::timer::start_time;
+use crate::timer::{start_time, start_timer_command};
 
 pub fn get_open_subcommand() -> clap::Command {
     Command::new("open")
@@ -19,17 +19,23 @@ pub fn open_project(config: &Configuration, projects: &mut Vec<Project>, timers:
         match config.get_editor(&project.ide) {
             Some(editor) => {
                 if let Some(path) = get_project_or_clone(project) {
-                    let mut editor_command = std::process::Command::new(&editor.command);
+                    let mut editor_command = std::process::Command::new("cmd");
                     println!("> Opening the project");
-                    // println!("If the timer doesn't start after the opening of your project, you can start with using the command: flow time [project name]");
+                    println!("If the timer doesn't start after the opening of your project, you can start with using the command: flow time [project name]");
 
                     editor_command
-                        .arg(&path)
-                        .status()
-                        .expect("Can't open project");
+                        .arg("/C")
+                        .arg(&editor.command)
+                    ;
+
+                    editor_command
+                        .arg(&project.path)
+                        .output()
+                        .expect("Can't open project")
+                        .stdout;
 
                     config.update_config_file(&projects);
-                    start_time(name.clone().to_string(), timers);
+                    start_timer_command(config, projects, timers, sub_matches);
                 }
                 else {
                     println!("No correct path found. Operation aborted")
