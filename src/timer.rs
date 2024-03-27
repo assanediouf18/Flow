@@ -32,8 +32,8 @@ pub fn stop_timer_command(config: &Configuration, projects: &mut Vec<Project>, t
     if let Some(project) = projects.iter_mut().find(|p| { p.name.to_lowercase() == name.to_lowercase() }) {
         let duration = stop_time(project.name.clone(), timers);
         project.add_time(duration);
+        println!("Total time spent on {}: {}", &project.name, project.print_timer());
         config.update_config_file(&projects);
-        println!("Total time spent on {}: {}", project.name, project.print_timer());
     }
     else {
         println!("The project '{name}' does not exist");
