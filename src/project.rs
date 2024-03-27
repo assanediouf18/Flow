@@ -60,7 +60,11 @@ impl Project {
 
     pub fn print_timer(&self) -> String {
         return match &self.time {
-            Some(time) => format!("{} days, {}:{}:{}", time.days, time.hours, time.minutes, time.seconds),
+            Some(time) => format!("{} days, {}:{}:{}",
+                                  time.days,
+                                  time.hours - time.days * 24,
+                                  time.minutes - time.hours * 60,
+                                  time.seconds - time.minutes * 60),
             _ => "0 days, 0:0:0".to_string()
         }
     }
@@ -86,10 +90,6 @@ impl ProjectTime {
     }
 
     pub fn to_time_delta(&self) -> Option<TimeDelta> {
-        let d = TimeDelta::try_days(self.days);
-        let h = TimeDelta::try_hours(self.hours);
-        let m = TimeDelta::try_minutes(self.minutes);
-        let s = TimeDelta::try_seconds(self.seconds);
-        d?.checked_add(&h.unwrap())?.checked_add(&m.unwrap())?.checked_add(&s.unwrap())
+        TimeDelta::try_seconds(self.seconds)
     }
 }
