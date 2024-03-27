@@ -12,7 +12,7 @@ use crate::commands::list::get_list_subcommand;
 use crate::commands::open::get_open_subcommand;
 use crate::commands::remove::get_remove_subcommand;
 use crate::commands::update::get_update_command;
-use crate::timer::{get_start_time_subcommand, get_stop_time_subcommand};
+use crate::timer::get_start_time_subcommand;
 
 pub fn create_main_command() -> Command {
     Command::new("flow")
@@ -25,5 +25,4 @@ pub fn create_main_command() -> Command {
         .subcommand(get_update_command())
         .subcommand(get_info_subcommand())
         .subcommand(get_start_time_subcommand())
-        .subcommand(get_stop_time_subcommand())
 }

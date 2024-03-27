@@ -5,7 +5,7 @@ use crate::project::Project;
 use std::{env, io};
 use std::path::PathBuf;
 use crate::flow_timer::FlowTimer;
-use crate::timer::{start_time, start_timer_command};
+use crate::timer::start_timer_command;
 
 pub fn get_open_subcommand() -> clap::Command {
     Command::new("open")
@@ -21,7 +21,7 @@ pub fn open_project(config: &Configuration, projects: &mut Vec<Project>, timers:
                 if let Some(path) = get_project_or_clone(project) {
                     let mut editor_command = std::process::Command::new("cmd");
                     println!("> Opening the project");
-                    println!("If the timer doesn't start after the opening of your project, you can start with using the command: flow time [project name]");
+                    println!("If the timer doesn't start after the opening of your project, you can start it using the command: flow start-timer [project name]");
 
                     editor_command
                         .arg("/C")
@@ -29,7 +29,7 @@ pub fn open_project(config: &Configuration, projects: &mut Vec<Project>, timers:
                     ;
 
                     editor_command
-                        .arg(&project.path)
+                        .arg(&path)
                         .output()
                         .expect("Can't open project")
                         .stdout;
@@ -76,7 +76,7 @@ fn clone_repo(project: &mut Project) -> Option<PathBuf> {
     io::stdin().read_line(&mut input).expect("Invalid input");
     let input = input.trim();
     if input.is_empty() {
-        path = PathBuf::from(&project.path);
+        path = PathBuf::from(env::current_dir().expect("Can't retrieve current path"));
     } else {
         path = PathBuf::from(input);
     }

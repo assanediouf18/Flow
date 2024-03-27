@@ -11,12 +11,6 @@ pub fn get_start_time_subcommand() -> Command {
         .arg(Arg::new("name").help("The name of the project"))
 }
 
-pub fn get_stop_time_subcommand() -> Command {
-    Command::new("stop-timer")
-        .about("Stops the timer for a project")
-        .arg(Arg::new("name").help("The name of the project"))
-}
-
 pub fn start_timer_command(config: &Configuration, projects: &mut Vec<Project>, timers: &mut Vec<FlowTimer>, sub_matches: &ArgMatches) {
     let name = sub_matches.get_one::<String>("name").expect("You must enter a project name");
     if let Some(project) = projects.iter_mut().find(|p| { p.name.to_lowercase() == name.to_lowercase() }) {
